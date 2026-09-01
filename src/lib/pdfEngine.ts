@@ -17,6 +17,7 @@ export interface PDFSectionBlock {
   html: string;
   priority?: number; // 1-10
   forceNewPage?: boolean;
+  minRemainingHeight?: number; // Minimum height required on current page to place this block (prevents orphan headings)
 }
 
 /**
@@ -187,15 +188,23 @@ export async function renderAndDownloadPaginatedPDF(
     measureContainer.innerHTML = block.html;
     const blockHeight = measureContainer.offsetHeight;
 
-    // If block fits within remaining space on current page:
-    if (currentAccumulatedHeight + blockHeight <= USABLE_PAGE_CONTENT_HEIGHT || currentPageBlocks.length === 0) {
+    // Check for explicit minRemainingHeight or automatic orphan prevention for headings/tables
+    const isHeadingBlock = block.html.includes("pdf-section-title") || block.html.includes("pdf-card-header");
+    const minRequired = block.minRemainingHeight ?? (isHeadingBlock ? 130 : 40);
+    const remainingHeightOnPage = USABLE_PAGE_CONTENT_HEIGHT - currentAccumulatedHeight;
+
+    // If block fits within remaining space on current page AND doesn't violate orphan threshold:
+    const canFit = (currentAccumulatedHeight + blockHeight <= USABLE_PAGE_CONTENT_HEIGHT);
+    const hasEnoughRoomForHeading = remainingHeightOnPage >= minRequired;
+
+    if ((canFit && hasEnoughRoomForHeading) || currentPageBlocks.length === 0) {
       currentPageBlocks.push(block.html);
-      currentAccumulatedHeight += blockHeight + 8; // account for margin between blocks
+      currentAccumulatedHeight += blockHeight + 10; // account for margin between blocks
     } else {
-      // Doesn't fit on current page -> push current page and start next page with this entire block intact!
+      // Doesn't fit or causes orphan heading -> push current page and start next page with this entire block intact!
       pages.push(currentPageBlocks);
       currentPageBlocks = [block.html];
-      currentAccumulatedHeight = blockHeight + 8;
+      currentAccumulatedHeight = blockHeight + 10;
     }
   }
 
