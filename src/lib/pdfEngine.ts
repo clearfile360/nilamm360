@@ -22,8 +22,8 @@ export interface PDFSectionBlock {
 /**
  * Escapes HTML special characters safely
  */
-export function escapePdfHtml(str?: string | null): string {
-  if (!str) return "";
+export function escapePdfHtml(str?: string | number | null): string {
+  if (str === null || str === undefined) return "";
   return String(str)
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
