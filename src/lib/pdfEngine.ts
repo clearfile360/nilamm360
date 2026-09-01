@@ -140,25 +140,27 @@ export async function renderAndDownloadPaginatedPDF(
   measureContainer.style.boxSizing = "border-box";
   measureContainer.style.fontFamily = "'Plus Jakarta Sans', 'Mukta Malar', 'Noto Sans Tamil', system-ui, -apple-system, sans-serif";
   measureContainer.style.fontSize = "10pt";
-  measureContainer.style.lineHeight = "1.5";
-  measureContainer.style.color = "#0f172a";
+  measureContainer.style.lineHeight = "1.55";
+  measureContainer.style.color = "#1e293b";
   
-  // Inject default baseline typography style for measurement
+  // Inject default baseline typography style for measurement matching the legal report aesthetic
   const styleEl = document.createElement("style");
   styleEl.innerHTML = `
     * { box-sizing: border-box; }
-    .pdf-stage-title { font-size: 14pt; font-weight: 800; color: #1e1b4b; margin: 14pt 0 6pt 0; padding-left: 8px; border-left: 4px solid #D4AF37; text-transform: uppercase; letter-spacing: 0.03em; line-height: 1.35; }
-    .pdf-section-title { font-size: 13pt; font-weight: 800; color: #1e1b4b; margin: 12pt 0 5pt 0; padding-left: 6px; border-left: 3.5px solid #D4AF37; text-transform: uppercase; letter-spacing: 0.03em; line-height: 1.35; }
-    .pdf-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px 10px; margin-bottom: 8px; font-size: 10pt; line-height: 1.5; box-shadow: 0 1px 2px rgba(0,0,0,0.03); }
-    .pdf-card-header { font-size: 11pt; font-weight: 800; color: #0f172a; border-bottom: 1px solid #f1f5f9; padding-bottom: 4px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; line-height: 1.35; }
-    .pdf-table { width: 100%; border-collapse: collapse; font-size: 9pt; margin-bottom: 6px; table-layout: fixed; }
-    .pdf-table th { background-color: #1e1b4b; color: #ffffff; font-weight: 700; text-align: left; padding: 6px 7px; border: 1px solid #1e1b4b; font-size: 9pt; line-height: 1.5; vertical-align: top; }
-    .pdf-table td { padding: 6px 7px; border: 1px solid #e2e8f0; color: #334155; vertical-align: top; word-break: break-word; line-height: 1.5; font-size: 9pt; }
-    .pdf-label { font-weight: 700; color: #475569; font-size: 8pt; text-transform: uppercase; letter-spacing: 0.03em; }
+    .pdf-stage-title { font-size: 14pt; font-weight: 800; color: #1e1b4b; margin: 14pt 0 6pt 0; padding-left: 8px; border-left: 4px solid #D4AF37; text-transform: uppercase; letter-spacing: 0.02em; line-height: 1.35; }
+    .pdf-section-title { font-size: 12pt; font-weight: 800; color: #1e1b4b; margin: 12pt 0 5pt 0; padding-left: 6px; border-left: 3px solid #D4AF37; text-transform: uppercase; letter-spacing: 0.02em; line-height: 1.35; }
+    .pdf-subheading { font-size: 11pt; font-weight: 700; color: #0f172a; margin: 8pt 0 3pt 0; line-height: 1.35; }
+    .pdf-p { font-size: 10pt; color: #1e293b; line-height: 1.55; margin: 0 0 8px 0; text-align: left; }
+    .pdf-callout { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 4px; padding: 8px 12px; margin-bottom: 8px; font-size: 10pt; line-height: 1.55; }
+    .pdf-table { width: 100%; border-collapse: collapse; font-size: 10pt; margin-bottom: 8px; table-layout: fixed; }
+    .pdf-table th { background-color: #1e1b4b; color: #ffffff; font-weight: 700; text-align: left; padding: 6px 8px; border: 1px solid #1e1b4b; font-size: 10pt; line-height: 1.45; vertical-align: top; }
+    .pdf-table td { padding: 6px 8px; border: 1px solid #cbd5e1; color: #334155; vertical-align: top; word-break: break-word; line-height: 1.55; font-size: 10pt; }
+    .pdf-table tr:nth-child(even) td { background-color: #f8fafc; }
+    .pdf-label { font-weight: 700; color: #475569; font-size: 8.5pt; text-transform: uppercase; letter-spacing: 0.03em; }
     .pdf-val { color: #0f172a; font-weight: 600; font-size: 10pt; }
-    .pdf-badge { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 8pt; font-weight: 700; text-transform: uppercase; white-space: nowrap; }
-    .pdf-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .pdf-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+    .pdf-badge { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 8.5pt; font-weight: 700; text-transform: uppercase; white-space: nowrap; }
+    .pdf-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .pdf-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
     .pdf-grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 6px; }
   `;
   measureContainer.appendChild(styleEl);
