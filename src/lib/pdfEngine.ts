@@ -47,46 +47,46 @@ export function getPdfLetterheadHeader(options: {
   statusBadge?: string;
 }): string {
   return `
-    <div class="pdf-header-wrapper" style="width: 100%; border-bottom: 2px solid #D4AF37; padding-bottom: 10px; margin-bottom: 12px; font-family: 'Plus Jakarta Sans', system-ui, sans-serif;">
+    <div class="pdf-header-wrapper" style="width: 100%; border-bottom: 2px solid #D4AF37; padding-bottom: 8px; margin-bottom: 10px; font-family: 'Plus Jakarta Sans', 'Mukta Malar', 'Noto Sans Tamil', system-ui, -apple-system, sans-serif;">
       <div style="display: flex; justify-content: space-between; align-items: flex-start;">
         <div style="display: flex; align-items: center; gap: 10px;">
-          <div style="width: 38px; height: 38px; border-radius: 8px; background: linear-gradient(135deg, #1e1b4b, #312e81, #4338ca); display: flex; align-items: center; justify-content: center; color: #ffffff; font-weight: 900; font-size: 16px; border: 1.5px solid #D4AF37; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+          <div style="width: 36px; height: 36px; border-radius: 8px; background: linear-gradient(135deg, #1e1b4b, #312e81, #4338ca); display: flex; align-items: center; justify-content: center; color: #ffffff; font-weight: 900; font-size: 15pt; border: 1.5px solid #D4AF37; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
             <span style="background: linear-gradient(135deg, #FDE68A, #D4AF37, #FFFFFF); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">U</span>
           </div>
           <div>
             <div style="display: flex; align-items: baseline; gap: 6px;">
-              <span style="font-size: 13px; font-weight: 900; letter-spacing: 0.06em; color: #0f172a; text-transform: uppercase;">UNIKORN360</span>
-              <span style="font-size: 10px; font-weight: 700; color: #B8860B; letter-spacing: 0.08em; text-transform: uppercase;">BUSINESS INTELLIGENCE</span>
+              <span style="font-size: 12pt; font-weight: 900; letter-spacing: 0.05em; color: #0f172a; text-transform: uppercase;">UNIKORN360</span>
+              <span style="font-size: 9pt; font-weight: 700; color: #B8860B; letter-spacing: 0.06em; text-transform: uppercase;">BUSINESS INTELLIGENCE</span>
             </div>
-            <div style="font-size: 8px; font-weight: 600; color: #64748b; letter-spacing: 0.04em;">
+            <div style="font-size: 8pt; font-weight: 600; color: #64748b; letter-spacing: 0.03em;">
               Intelligent Systems • Real-World Impact
             </div>
-            <div style="font-size: 7px; color: #475569; margin-top: 1px; font-weight: 500;">
+            <div style="font-size: 7.5pt; color: #475569; margin-top: 1px; font-weight: 500;">
               Business Consulting • AI &amp; Systems Strategy • Finance Advisory • Compliance &amp; Subsidy • Corporate Branding • Project Consulting
             </div>
           </div>
         </div>
 
-        <div style="text-align: right; font-size: 8px; color: #334155; line-height: 1.35;">
-          <div style="display: inline-block; background: #f1f5f9; border: 1px solid #cbd5e1; padding: 2px 6px; border-radius: 4px; font-weight: 800; color: #1e293b; font-size: 7.5px; text-transform: uppercase; letter-spacing: 0.04em;">
+        <div style="text-align: right; font-size: 8.5pt; color: #334155; line-height: 1.35;">
+          <div style="display: inline-block; background: #f1f5f9; border: 1px solid #cbd5e1; padding: 2px 6px; border-radius: 4px; font-weight: 800; color: #1e293b; font-size: 8pt; text-transform: uppercase; letter-spacing: 0.04em;">
             ${escapePdfHtml(options.reportType)}
           </div>
-          <div style="margin-top: 3px; font-family: monospace; font-weight: 700; color: #0f172a; font-size: 8.5px;">
+          <div style="margin-top: 3px; font-family: monospace; font-weight: 700; color: #0f172a; font-size: 8.5pt;">
             CASE ID: <span style="color: #4338ca;">${escapePdfHtml(options.caseId)}</span>
           </div>
-          <div style="color: #64748b; font-size: 7.5px;">
+          <div style="color: #64748b; font-size: 8pt;">
             DATE: ${escapePdfHtml(options.dateStr)}
             ${options.modelUsed ? ` • MODEL: <b style="color:#0f172a;">${escapePdfHtml(options.modelUsed)}</b>` : ""}
           </div>
         </div>
       </div>
 
-      <div style="margin-top: 8px; padding-top: 6px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
-        <div style="font-size: 11px; font-weight: 800; color: #0f172a; letter-spacing: -0.01em;">
+      <div style="margin-top: 6px; padding-top: 5px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+        <div style="font-size: 15pt; font-weight: 800; color: #0f172a; letter-spacing: -0.01em; line-height: 1.2;">
           ${escapePdfHtml(options.documentTitle)}
         </div>
         ${options.clientName ? `
-          <div style="font-size: 8px; color: #475569; font-weight: 600;">
+          <div style="font-size: 8.5pt; color: #475569; font-weight: 600;">
             Client: <b style="color:#0f172a;">${escapePdfHtml(options.clientName)}</b>
             ${options.category ? ` | ${escapePdfHtml(options.category)}` : ""}
           </div>
@@ -101,7 +101,7 @@ export function getPdfLetterheadHeader(options: {
  */
 export function getPdfLetterheadFooter(pageIndex: number, totalPages: number): string {
   return `
-    <div class="pdf-footer-wrapper" style="width: 100%; border-top: 1.5px solid #D4AF37; padding-top: 6px; margin-top: 10px; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; display: flex; justify-content: space-between; align-items: center; font-size: 7.5px; color: #64748b;">
+    <div class="pdf-footer-wrapper" style="width: 100%; border-top: 1.5px solid #D4AF37; padding-top: 5px; margin-top: 8px; font-family: 'Plus Jakarta Sans', 'Mukta Malar', 'Noto Sans Tamil', system-ui, -apple-system, sans-serif; display: flex; justify-content: space-between; align-items: center; font-size: 8pt; color: #64748b;">
       <div>
         <span style="font-weight: 700; color: #0f172a;">UNIKORN360 Business Intelligence</span> • Land Revenue &amp; Registration Legal AI Division • Confidential Report
       </div>
@@ -131,17 +131,40 @@ export async function renderAndDownloadPaginatedPDF(
   // Usable height inside an A4 page
   const CONTENT_MAX_HEIGHT = A4_HEIGHT_PX - (PADDING_TOP + PADDING_BOTTOM);
 
-  // Hidden container for measurement
+  // Hidden container for measurement with exact styling
   const measureContainer = document.createElement("div");
   measureContainer.style.position = "absolute";
   measureContainer.style.left = "-9999px";
   measureContainer.style.top = "-9999px";
   measureContainer.style.width = `${A4_WIDTH_PX - PADDING_HORIZ * 2}px`;
   measureContainer.style.boxSizing = "border-box";
-  measureContainer.style.fontFamily = "'Plus Jakarta Sans', 'Mukta Malar', 'Noto Sans Tamil', system-ui, sans-serif";
-  measureContainer.style.fontSize = "10px";
+  measureContainer.style.fontFamily = "'Plus Jakarta Sans', 'Mukta Malar', 'Noto Sans Tamil', system-ui, -apple-system, sans-serif";
+  measureContainer.style.fontSize = "10pt";
   measureContainer.style.lineHeight = "1.5";
   measureContainer.style.color = "#0f172a";
+  
+  // Inject default baseline typography style for measurement
+  const styleEl = document.createElement("style");
+  styleEl.innerHTML = `
+    * { box-sizing: border-box; }
+    .pdf-stage-title { font-size: 14pt; font-weight: 800; color: #1e1b4b; margin: 14pt 0 6pt 0; padding-left: 8px; border-left: 4px solid #D4AF37; text-transform: uppercase; letter-spacing: 0.03em; line-height: 1.35; }
+    .pdf-section-title { font-size: 13pt; font-weight: 800; color: #1e1b4b; margin: 12pt 0 5pt 0; padding-left: 6px; border-left: 3.5px solid #D4AF37; text-transform: uppercase; letter-spacing: 0.03em; line-height: 1.35; }
+    .pdf-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px 10px; margin-bottom: 8px; font-size: 10pt; line-height: 1.5; box-shadow: 0 1px 2px rgba(0,0,0,0.03); }
+    .pdf-card-header { font-size: 11pt; font-weight: 800; color: #0f172a; border-bottom: 1px solid #f1f5f9; padding-bottom: 4px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; line-height: 1.35; }
+    .pdf-table { width: 100%; border-collapse: collapse; font-size: 9pt; margin-bottom: 6px; table-layout: fixed; }
+    .pdf-table th { background-color: #1e1b4b; color: #ffffff; font-weight: 700; text-align: left; padding: 6px 7px; border: 1px solid #1e1b4b; font-size: 9pt; line-height: 1.5; vertical-align: top; }
+    .pdf-table td { padding: 6px 7px; border: 1px solid #e2e8f0; color: #334155; vertical-align: top; word-break: break-word; line-height: 1.5; font-size: 9pt; }
+    .pdf-label { font-weight: 700; color: #475569; font-size: 8pt; text-transform: uppercase; letter-spacing: 0.03em; }
+    .pdf-val { color: #0f172a; font-weight: 600; font-size: 10pt; }
+    .pdf-badge { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 8pt; font-weight: 700; text-transform: uppercase; white-space: nowrap; }
+    .pdf-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .pdf-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+    .pdf-grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 6px; }
+  `;
+  measureContainer.appendChild(styleEl);
+
+  const measureInner = document.createElement("div");
+  measureContainer.appendChild(measureInner);
   document.body.appendChild(measureContainer);
 
   // Measure Header Height
@@ -156,16 +179,17 @@ export async function renderAndDownloadPaginatedPDF(
     statusBadge: options.statusBadge
   });
 
-  measureContainer.innerHTML = headerHtml;
-  const headerHeight = measureContainer.offsetHeight + 10; // extra spacing margin
+  measureInner.innerHTML = headerHtml;
+  const headerHeight = measureInner.offsetHeight + 10; // extra spacing margin
 
   // Measure Footer Height
   const footerSampleHtml = getPdfLetterheadFooter(1, 1);
-  measureContainer.innerHTML = footerSampleHtml;
-  const footerHeight = measureContainer.offsetHeight + 8;
+  measureInner.innerHTML = footerSampleHtml;
+  const footerHeight = measureInner.offsetHeight + 8;
 
   // Maximum content space available between Header and Footer on ANY page
-  const USABLE_PAGE_CONTENT_HEIGHT = CONTENT_MAX_HEIGHT - headerHeight - footerHeight;
+  // Include 15px buffer for safety against canvas scaling differences
+  const USABLE_PAGE_CONTENT_HEIGHT = CONTENT_MAX_HEIGHT - headerHeight - footerHeight - 15;
 
   // Standardize block inputs
   const rawBlockList: PDFSectionBlock[] = blocks.map(b => (typeof b === "string" ? { html: b } : b));
@@ -184,13 +208,23 @@ export async function renderAndDownloadPaginatedPDF(
       currentAccumulatedHeight = 0;
     }
 
-    // Measure this block's rendered height
-    measureContainer.innerHTML = block.html;
-    const blockHeight = measureContainer.offsetHeight;
+    // Measure this block's rendered height inside styled measure container
+    measureInner.innerHTML = block.html;
+    const blockHeight = measureInner.offsetHeight;
 
     // Check for explicit minRemainingHeight or automatic orphan prevention for headings/tables
-    const isHeadingBlock = block.html.includes("pdf-section-title") || block.html.includes("pdf-card-header");
-    const minRequired = block.minRemainingHeight ?? (isHeadingBlock ? 130 : 40);
+    const isMajorStage = block.html.includes("pdf-stage-title");
+    const isSectionHeading = block.html.includes("pdf-section-title");
+    const isCardHeader = block.html.includes("pdf-card-header");
+    const hasTable = block.html.includes("pdf-table");
+    
+    let defaultMinRequired = 50;
+    if (isMajorStage) defaultMinRequired = 220;
+    else if (isSectionHeading && hasTable) defaultMinRequired = 200;
+    else if (isSectionHeading) defaultMinRequired = 160;
+    else if (isCardHeader) defaultMinRequired = 140;
+
+    const minRequired = block.minRemainingHeight ?? defaultMinRequired;
     const remainingHeightOnPage = USABLE_PAGE_CONTENT_HEIGHT - currentAccumulatedHeight;
 
     // If block fits within remaining space on current page AND doesn't violate orphan threshold:
