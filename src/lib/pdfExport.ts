@@ -663,13 +663,20 @@ export function renderStage11Blocks(caseData: PropertyCase): PDFSectionBlock[] {
 
   if (!stage11) {
     blocks.push({
-      minRemainingHeight: 120,
+      minRemainingHeight: 100,
       html: `
         ${PDF_SHARED_STYLES}
         <div class="pdf-stage-title">
-          நிலை 11 - முன்மாதிரி தீர்ப்புகள் • STAGE 11 PRECEDENT INTELLIGENCE
+          11. முன்மாதிரி தீர்ப்புகள் • STAGE 11: PRECEDENT INTELLIGENCE
         </div>
-        <p class="pdf-article" style="color: #64748b; font-style: italic;">No Stage 11 data available in this case analysis.</p>
+        <div class="pdf-callout" style="border-left: 3px solid #64748b; background: #f8fafc; margin-bottom: 8px;">
+          <p class="pdf-article" style="margin: 0; color: #475569; font-weight: 700;">
+            முன்மாதிரி தீர்ப்புகள் கிடைக்கவில்லை • No precedent intelligence available
+          </p>
+          <p class="pdf-article" style="margin: 4px 0 0 0; color: #64748b;">
+            No precedent intelligence or court authorities available in this case record.
+          </p>
+        </div>
       `
     });
     return blocks;
@@ -683,41 +690,37 @@ export function renderStage11Blocks(caseData: PropertyCase): PDFSectionBlock[] {
   const overallPrinciples: string[] = stage11.overallPrinciples || [];
   const successProb = stage11.successProbability;
 
-  const similarCasesCount = stage11.similarCasesCount || similarCases.length;
+  const similarCasesCount = stage11.similarCasesCount ?? similarCases.length;
   const avgSimScore = stage11.averageSimilarityScore || (similarCases.length > 0 ? Math.round(similarCases.reduce((acc, c) => acc + (c.similarityScore || 0), 0) / similarCases.length) : 0);
   const highCourtCount = authSummary.highCourtCount || similarCases.filter(c => (c.court || "").toLowerCase().includes("high court") || (c.court || "").toLowerCase().includes("madras")).length;
   const supremeCourtCount = authSummary.supremeCourtCount || similarCases.filter(c => (c.court || "").toLowerCase().includes("supreme court")).length;
   const govOrdersCount = authSummary.governmentOrdersCount || govOrders.length;
   const circularsCount = authSummary.circularsCount || circulars.length;
 
-  // 1. Stage 11 Title + Summary KPI Grid + Success Probability
+  // 1. Stage 11 Title + Executive Summary Table + Success Probability
   blocks.push({
     minRemainingHeight: 120,
     html: `
       ${PDF_SHARED_STYLES}
       <div class="pdf-stage-title">
-        நிலை 11 • STAGE 11: PRECEDENT INTELLIGENCE (முன்மாதிரி தீர்ப்புகள்)
+        11. முன்மாதிரி தீர்ப்புகள் • STAGE 11: PRECEDENT INTELLIGENCE
       </div>
 
-      <!-- Summary KPI Grid -->
-      <div class="pdf-grid-4" style="margin-bottom: 8px;">
-        <div style="background: #faf5ff; border: 1px solid #e9d5ff; padding: 6px 8px; border-radius: 4px; font-size: 10pt;">
-          <span class="pdf-label" style="color: #6b21a8;">Similar Cases</span>
-          <div style="color: #581c87; font-weight: 800; font-size: 10pt;">${similarCasesCount} <b>Judgments</b></div>
-        </div>
-        <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 6px 8px; border-radius: 4px; font-size: 10pt;">
-          <span class="pdf-label" style="color: #15803d;">Avg Similarity</span>
-          <div style="color: #166534; font-weight: 800; font-size: 10pt;">${avgSimScore}%</div>
-        </div>
-        <div style="background: #eff6ff; border: 1px solid #bfdbfe; padding: 6px 8px; border-radius: 4px; font-size: 10pt;">
-          <span class="pdf-label" style="color: #1d4ed8;">High Court / SC</span>
-          <div style="color: #1e40af; font-weight: 800; font-size: 10pt;">${highCourtCount} HC / ${supremeCourtCount} SC</div>
-        </div>
-        <div style="background: #fffbeb; border: 1px solid #fde68a; padding: 6px 8px; border-radius: 4px; font-size: 10pt;">
-          <span class="pdf-label" style="color: #b45309;">G.O.s &amp; Circulars</span>
-          <div style="color: #92400e; font-weight: 800; font-size: 10pt;">${govOrdersCount} G.O. / ${circularsCount} Circ.</div>
-        </div>
-      </div>
+      <!-- Executive Authority Summary Table -->
+      <table class="pdf-table" style="margin-bottom: 8px;">
+        <tr>
+          <th style="width: 25%;">Similar Judgments</th>
+          <td style="width: 25%;"><b>${similarCasesCount} Judgments</b></td>
+          <th style="width: 25%;">Avg Similarity Score</th>
+          <td style="width: 25%;"><b style="color: #065f46;">${avgSimScore}%</b></td>
+        </tr>
+        <tr>
+          <th>High Court / SC Rulings</th>
+          <td><b>${highCourtCount} HC</b> / <b>${supremeCourtCount} SC</b></td>
+          <th>G.O.s &amp; Circulars</th>
+          <td><b>${govOrdersCount} G.O.</b> / <b>${circularsCount} Circulars</b></td>
+        </tr>
+      </table>
 
       <!-- Success Probability Assessment -->
       ${successProb ? `
@@ -769,17 +772,17 @@ export function renderStage11Blocks(caseData: PropertyCase): PDFSectionBlock[] {
       blocks.push({
         minRemainingHeight: 90,
         html: `
-          <div style="border-top: 2px solid #1e1b4b; padding-top: 6px; margin-top: 8px; margin-bottom: 6px; font-size: 10pt;">
+          <div style="border-top: 2px solid #0f2b5c; padding-top: 6px; margin-top: 8px; margin-bottom: 6px; font-size: 10pt;">
             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
               <div>
                 <div class="pdf-subheading" style="margin: 0; color: #0f172a; font-weight: 800; font-size: 10pt;">
                   ${i + 1}. ${escapePdfHtml(caseTitle)}
                 </div>
                 <div style="color: #475569; margin-top: 1px; font-size: 10pt;">
-                  Citation: <b style="color: #1e1b4b;">${escapePdfHtml(citation)}</b> ${caseId ? `• ID: ${escapePdfHtml(caseId)}` : ""}
+                  Citation: <b style="color: #0f2b5c;">${escapePdfHtml(citation)}</b> ${caseId ? `• ID: ${escapePdfHtml(caseId)}` : ""}
                 </div>
                 ${courtDetails ? `<div style="color: #475569; margin-top: 1px; font-size: 10pt;"><b>Court / Bench:</b> ${escapePdfHtml(courtDetails)}</div>` : ""}
-                ${caseType ? `<div style="color: #6b21a8; margin-top: 1px; font-size: 10pt;"><b>Type / Category:</b> ${escapePdfHtml(caseType)}</div>` : ""}
+                ${caseType ? `<div style="color: #0f2b5c; margin-top: 1px; font-size: 10pt;"><b>Type / Category:</b> ${escapePdfHtml(caseType)}</div>` : ""}
               </div>
               <div style="text-align: right; shrink-0;">
                 <span class="pdf-badge ${isFavorable ? 'pdf-badge-emerald' : 'pdf-badge-amber'}">
@@ -881,9 +884,9 @@ export function renderStage11Blocks(caseData: PropertyCase): PDFSectionBlock[] {
             ` : ""}
 
             ${c.strategicValue ? `
-              <div class="pdf-callout" style="border-left-color: #7c3aed; background: #faf5ff; margin-bottom: 8px;">
-                <span class="pdf-label" style="color: #6b21a8;">பயன்பாட்டு உத்தி / Strategic Value for Present Case:</span>
-                <p class="pdf-article" style="color: #3b0764; font-weight: 600; margin: 2px 0 0 0;">${escapePdfHtml(c.strategicValue)}</p>
+              <div class="pdf-callout" style="border-left-color: #0f2b5c; background: #f8fafc; margin-bottom: 8px;">
+                <span class="pdf-label" style="color: #0f2b5c;">பயன்பாட்டு உத்தி / Strategic Value for Present Case:</span>
+                <p class="pdf-article" style="color: #0f172a; font-weight: 600; margin: 2px 0 0 0;">${escapePdfHtml(c.strategicValue)}</p>
               </div>
             ` : ""}
           </div>
@@ -892,8 +895,16 @@ export function renderStage11Blocks(caseData: PropertyCase): PDFSectionBlock[] {
     }
   } else {
     blocks.push({
+      minRemainingHeight: 60,
       html: `
-        <p class="pdf-article" style="color: #475569; font-style: italic;">No similar precedent cases indexed for this matter.</p>
+        <div class="pdf-callout" style="border-left: 3px solid #64748b; background: #f8fafc; margin-bottom: 8px;">
+          <p class="pdf-article" style="margin: 0; color: #475569; font-weight: 700;">
+            முன்மாதிரி தீர்ப்புகள் கிடைக்கவில்லை • No precedent intelligence available
+          </p>
+          <p class="pdf-article" style="margin: 2px 0 0 0; color: #64748b; font-style: italic;">
+            No direct matching court precedents were indexed in this case record.
+          </p>
+        </div>
       `
     });
   }
@@ -918,7 +929,7 @@ export function renderStage11Blocks(caseData: PropertyCase): PDFSectionBlock[] {
               <td>${escapePdfHtml(go.date)}</td>
               <td>${escapePdfHtml(go.department)}</td>
               <td>${escapePdfHtml(go.subject)}</td>
-              <td><b style="color: #581c87;">${escapePdfHtml(go.relevance)}</b></td>
+              <td><b style="color: #0f2b5c;">${escapePdfHtml(go.relevance)}</b></td>
             </tr>
           `).join("")}
         </table>
@@ -946,7 +957,7 @@ export function renderStage11Blocks(caseData: PropertyCase): PDFSectionBlock[] {
               <td>${escapePdfHtml(circ.date)}</td>
               <td>${escapePdfHtml(circ.department)}</td>
               <td>${escapePdfHtml(circ.subject)}</td>
-              <td><b style="color: #1e40af;">${escapePdfHtml(circ.relevance)}</b></td>
+              <td><b style="color: #0f2b5c;">${escapePdfHtml(circ.relevance)}</b></td>
             </tr>
           `).join("")}
         </table>
@@ -976,7 +987,7 @@ export function renderStage11Blocks(caseData: PropertyCase): PDFSectionBlock[] {
           <div class="pdf-subheading" style="color: #78350f; margin-top: 0; margin-bottom: 4px;">
             முன்மாதிரி தீர்ப்புகள் அடிப்படையிலான சட்ட உத்தி • PRECEDENT-BASED STRATEGY RECOMMENDATION
           </div>
-          <p class="pdf-article" style="color: #1e1b4b; font-weight: 600; margin: 0;">
+          <p class="pdf-article" style="color: #0f2b5c; font-weight: 600; margin: 0;">
             ${escapePdfHtml(stage11.strategyRecommendationFromPrecedents)}
           </p>
         </div>
@@ -1000,9 +1011,16 @@ export function renderStage12Blocks(caseData: PropertyCase): PDFSectionBlock[] {
       html: `
         ${PDF_SHARED_STYLES}
         <div class="pdf-stage-title">
-          நிலை 12 • STAGE 12: LITIGATION SIMULATOR &amp; COUNTER-STRATEGY
+          12. வழக்கு உருவகப்படுத்துதல் &amp; எதிர் உத்திகள் • STAGE 12: LITIGATION SIMULATOR &amp; STRATEGY
         </div>
-        <p class="pdf-article" style="color: #64748b; font-style: italic;">No Stage 12 data available in this case analysis.</p>
+        <div class="pdf-callout" style="border-left: 3px solid #64748b; background: #f8fafc; margin-bottom: 8px;">
+          <p class="pdf-article" style="margin: 0; color: #475569; font-weight: 700;">
+            சட்ட உத்தி சிமுலேஷன் கிடைக்கவில்லை • No legal strategy simulation available
+          </p>
+          <p class="pdf-article" style="margin: 4px 0 0 0; color: #64748b;">
+            Legal strategy simulation details have not been generated for this case.
+          </p>
+        </div>
       `
     });
     return blocks;
@@ -1015,39 +1033,37 @@ export function renderStage12Blocks(caseData: PropertyCase): PDFSectionBlock[] {
   const additionalProofs = stage12.recommendedAdditionalProof || [];
   const priorityActions = stage12.priorityNextActions || [];
 
-  // 1. Strongest Legal Route Block (Full-Width Article + Compact Metric Box)
+  // 1. Strongest Legal Route Block (Full-Width Article + Structured Property Table)
   blocks.push({
     minRemainingHeight: 110,
     html: `
       ${PDF_SHARED_STYLES}
       <div class="pdf-stage-title">
-        நிலை 12 • STAGE 12: LITIGATION SIMULATOR &amp; COUNTER-STRATEGY
+        12. வழக்கு உருவகப்படுத்துதல் &amp; எதிர் உத்திகள் • STAGE 12: LITIGATION SIMULATOR &amp; STRATEGY
       </div>
 
       ${route ? `
         <div style="margin-bottom: 8px;">
           <div class="pdf-section-title">12.1 மிக வலுவான சட்ட வழிமுறை • STRONGEST LEGAL ROUTE</div>
-          <div class="pdf-article-lead" style="color: #1e1b4b; margin-bottom: 4px;">
+          <div class="pdf-article-lead" style="color: #0f2b5c; margin-bottom: 4px;">
             ${escapePdfHtml(route.routeName || "Strategic Legal Action")}
           </div>
           <div class="pdf-subheading">ஏன் இந்த வழிமுறை? / JUSTIFICATION</div>
           <p class="pdf-article" style="margin-bottom: 6px;">
             ${escapePdfHtml(route.justification || "Recommended legal track optimized for highest statutory and administrative relief.")}
           </p>
-          <div class="pdf-grid-3" style="background: #f8fafc; padding: 6px 8px; border-radius: 4px; border: 1px solid #cbd5e1; margin-bottom: 6px; font-size: 10pt;">
-            <div>
-              <span class="pdf-label">Route Type:</span>
-              <div class="pdf-val">${escapePdfHtml(route.routeType || "Writ / Civil")}</div>
-            </div>
-            <div>
-              <span class="pdf-label">Est. Resolution Time:</span>
-              <div class="pdf-val">${escapePdfHtml(route.timeToResolutionEst || "3-6 Months")}</div>
-            </div>
-            <div>
-              <span class="pdf-label">Success Probability:</span>
-              <div class="pdf-val" style="color: #059669; font-weight: 800; font-size: 10pt;">${route.successProbabilityPercentage ? `${route.successProbabilityPercentage}%` : "85%+"}</div>
-            </div>
-          </div>
+          <table class="pdf-table" style="margin-bottom: 6px;">
+            <tr>
+              <th style="width: 33%;">Route Type</th>
+              <th style="width: 33%;">Est. Resolution Time</th>
+              <th style="width: 34%;">Success Probability</th>
+            </tr>
+            <tr>
+              <td><b>${escapePdfHtml(route.routeType || "Writ / Civil")}</b></td>
+              <td>${escapePdfHtml(route.timeToResolutionEst || "3-6 Months")}</td>
+              <td><b style="color: #065f46;">${route.successProbabilityPercentage ? `${route.successProbabilityPercentage}%` : "85%+"}</b></td>
+            </tr>
+          </table>
         </div>
       ` : ""}
     `
@@ -1151,7 +1167,7 @@ export function renderStage12Blocks(caseData: PropertyCase): PDFSectionBlock[] {
           </tr>
           ${priorityActions.map((pa, idx) => `
             <tr>
-              <td style="text-align: center; font-weight: 800; color: #4338ca;">#${escapePdfHtml(pa.stepNumber ?? idx + 1)}</td>
+              <td style="text-align: center; font-weight: 800; color: #0f2b5c;">#${escapePdfHtml(pa.stepNumber ?? idx + 1)}</td>
               <td><b>${escapePdfHtml(pa.action)}</b></td>
               <td>${escapePdfHtml(pa.targetAuthority)}</td>
               <td><b>${escapePdfHtml(pa.timeline)}</b></td>
