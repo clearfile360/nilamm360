@@ -148,6 +148,29 @@ export async function renderAndDownloadPaginatedPDF(
       font-family: 'Mukta Malar', 'Noto Sans Tamil', system-ui, -apple-system, sans-serif !important;
       font-size: 10pt !important;
     }
+    .pdf-full-width {
+      width: 100%;
+      display: block;
+    }
+    .pdf-article {
+      width: 100%;
+      display: block;
+      font-size: 10pt !important;
+      line-height: 1.55;
+      margin: 0 0 8px 0;
+      text-align: left;
+      color: #1e293b;
+    }
+    .pdf-article-lead {
+      width: 100%;
+      display: block;
+      font-size: 10pt !important;
+      font-weight: 700;
+      line-height: 1.55;
+      margin: 0 0 8px 0;
+      text-align: left;
+      color: #0f172a;
+    }
     .pdf-stage-title {
       font-size: 10pt !important;
       font-weight: 800;
@@ -158,6 +181,8 @@ export async function renderAndDownloadPaginatedPDF(
       text-transform: uppercase;
       letter-spacing: 0.04em;
       line-height: 1.45;
+      width: 100%;
+      display: block;
     }
     .pdf-section-title {
       font-size: 10pt !important;
@@ -169,6 +194,8 @@ export async function renderAndDownloadPaginatedPDF(
       text-transform: uppercase;
       letter-spacing: 0.03em;
       line-height: 1.45;
+      width: 100%;
+      display: block;
     }
     .pdf-subheading {
       font-size: 10pt !important;
@@ -176,8 +203,12 @@ export async function renderAndDownloadPaginatedPDF(
       color: #0f172a;
       margin: 6pt 0 3pt 0;
       line-height: 1.45;
+      width: 100%;
+      display: block;
     }
     .pdf-p {
+      width: 100%;
+      display: block;
       font-size: 10pt !important;
       color: #1e293b;
       line-height: 1.55;
@@ -185,6 +216,8 @@ export async function renderAndDownloadPaginatedPDF(
       text-align: left;
     }
     .pdf-p-lead {
+      width: 100%;
+      display: block;
       font-size: 10pt !important;
       font-weight: 700;
       color: #0f172a;
@@ -193,6 +226,8 @@ export async function renderAndDownloadPaginatedPDF(
       text-align: left;
     }
     .pdf-callout {
+      width: 100%;
+      display: block;
       background: #ffffff;
       border: 1px solid #cbd5e1;
       border-left: 3px solid #1e1b4b;
@@ -202,6 +237,8 @@ export async function renderAndDownloadPaginatedPDF(
       line-height: 1.55;
     }
     .pdf-callout-gold {
+      width: 100%;
+      display: block;
       background: #fffdf7;
       border: 1px solid #cbd5e1;
       border-left: 3px solid #b45309;
@@ -266,6 +303,7 @@ export async function renderAndDownloadPaginatedPDF(
     .pdf-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
     .pdf-grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 6px; }
     .pdf-list {
+      width: 100%;
       margin: 0 0 8px 0;
       padding-left: 18px;
       font-size: 10pt !important;
