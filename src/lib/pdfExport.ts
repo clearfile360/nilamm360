@@ -70,9 +70,9 @@ export const PDF_SHARED_STYLES = `
       color: #1e1b4b;
       margin: 12pt 0 6pt 0;
       padding-left: 8px;
-      border-left: 3px solid #1e1b4b;
+      border-left: 3.5px solid #1e1b4b;
       text-transform: uppercase;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.03em;
       line-height: 1.45;
       width: 100%;
       display: block;
@@ -81,11 +81,11 @@ export const PDF_SHARED_STYLES = `
       font-size: 10pt !important;
       font-weight: 800;
       color: #1e1b4b;
-      margin: 10pt 0 4pt 0;
+      margin: 9pt 0 4pt 0;
       padding-left: 6px;
-      border-left: 2.5px solid #1e1b4b;
+      border-left: 2.5px solid #4338ca;
       text-transform: uppercase;
-      letter-spacing: 0.03em;
+      letter-spacing: 0.02em;
       line-height: 1.45;
       width: 100%;
       display: block;
@@ -148,23 +148,23 @@ export const PDF_SHARED_STYLES = `
       table-layout: fixed;
     }
     .pdf-table th {
-      background-color: #1e1b4b;
-      color: #ffffff;
+      background-color: #f1f5f9;
+      color: #1e1b4b;
       font-weight: 700;
       text-align: left;
       padding: 5px 8px;
-      border: 1px solid #1e1b4b;
+      border: 1px solid #cbd5e1;
       font-size: 10pt !important;
       line-height: 1.45;
-      vertical-align: top;
+      vertical-align: middle;
     }
     .pdf-table td {
       padding: 5px 8px;
       border: 1px solid #cbd5e1;
-      color: #334155;
+      color: #1e293b;
       vertical-align: top;
       word-break: break-word;
-      line-height: 1.55;
+      line-height: 1.5;
       font-size: 10pt !important;
     }
     .pdf-table tr:nth-child(even) td {
@@ -262,6 +262,47 @@ export function renderCaseBanner(caseData: PropertyCase): string {
   `;
 }
 
+// Helper to extract clean date/period and description from timeline entries
+function parseTimelineEntry(ev: any): { date: string; description: string } {
+  if (typeof ev === 'string') {
+    // Check patterns like "2018 - ...", "2018:", "03/07/2024 - ...", "2024 ஜூலை 3: ...", etc.
+    const match = ev.match(/^([0-9]{4}(?:\s*-\s*[0-9]{4})?|[0-9]{1,2}[\/\.\-][0-9]{1,2}[\/\.\-][0-9]{2,4}|[0-9]{4}\s*[\u0B80-\u0BFF\w\s]+|\b\w+\s+[0-9]{4}\b)(?:\s*[\:\-\–\—\•]\s*|\s+)(.*)$/i);
+    if (match) {
+      return { date: match[1].trim(), description: match[2].trim() };
+    }
+    // Check Tamil prefixes like "2024 ஜூலை 3-ம் தேதி..." or "2018-ல்..."
+    const tamilDateMatch = ev.match(/^([0-9]{4}[\u0B80-\u0BFF\s\-\,\.\d]+?)(?:\s*[\:\-\–\—\•]\s*|\s*,\s*|\s+-\s+)(.*)$/);
+    if (tamilDateMatch && tamilDateMatch[1].length < 35) {
+      return { date: tamilDateMatch[1].trim(), description: tamilDateMatch[2].trim() };
+    }
+    return { date: 'முக்கிய நிகழ்வு / Key Event', description: ev };
+  }
+  
+  const dateStr = ev.date || ev.year || ev.period || ev.timeframe || 'முக்கிய நிகழ்வு';
+  const descStr = ev.event || ev.description || ev.details || ev.action || '';
+  return { date: String(dateStr), description: String(descStr) };
+}
+
+// Helper to determine if a document is present in available evidence
+function checkIsDocumentAvailable(docName: string, availableList: string[], missingList: string[]): boolean {
+  if (!docName) return false;
+  const normDoc = docName.toLowerCase().replace(/[^a-zA-Z0-9\u0B80-\u0BFF]/g, "");
+  for (const a of availableList) {
+    if (!a) continue;
+    const normA = a.toLowerCase().replace(/[^a-zA-Z0-9\u0B80-\u0BFF]/g, "");
+    if (normDoc.includes(normA) || normA.includes(normDoc)) return true;
+    const words = a.toLowerCase().split(/[\s,\-\(\)\/\.]+/).filter(w => w.length >= 3);
+    const matchCount = words.filter(w => docName.toLowerCase().includes(w)).length;
+    if (words.length > 0 && matchCount >= Math.min(2, words.length)) return true;
+  }
+  for (const m of missingList) {
+    if (!m) continue;
+    const normM = m.toLowerCase().replace(/[^a-zA-Z0-9\u0B80-\u0BFF]/g, "");
+    if (normDoc.includes(normM) || normM.includes(normDoc)) return false;
+  }
+  return false;
+}
+
 // -------------------------------------------------------------------------------------------------
 // REUSABLE STAGES 00-10 BLOCK GENERATOR (Full Actual Content of Stages 00 to 10)
 // -------------------------------------------------------------------------------------------------
@@ -282,11 +323,11 @@ export function renderStage00To10Blocks(caseData: PropertyCase): PDFSectionBlock
 
   // STAGE 00 & STAGE 01: Client Intake & Dispute Classification (Full-Width Structured Tables)
   blocks.push({
-    minRemainingHeight: 220,
+    minRemainingHeight: 140,
     html: `
       ${PDF_SHARED_STYLES}
       ${renderCaseBanner(caseData)}
-      <div class="pdf-stage-title">STAGE 00 &amp; 01: CLIENT INTAKE &amp; DISPUTE CLASSIFICATION</div>
+      <div class="pdf-stage-title">நிலை 00 &amp; 01 • STAGE 00 &amp; 01: CLIENT INTAKE &amp; DISPUTE CLASSIFICATION</div>
       
       <div class="pdf-subheading" style="color: #1e1b4b; border-bottom: 1.5px solid #1e1b4b; padding-bottom: 3px; margin-bottom: 6px;">
         CLIENT &amp; DISPUTE PARTICULARS
@@ -343,9 +384,9 @@ export function renderStage00To10Blocks(caseData: PropertyCase): PDFSectionBlock
   const rootCause = stage2.rootCauseStatement || "Discrepancy in revenue records and lack of due enquiry prior to mutation.";
   
   blocks.push({
-    minRemainingHeight: 180,
+    minRemainingHeight: 80,
     html: `
-      <div class="pdf-section-title">STAGE 02: CORE LEGAL ISSUE &amp; ROOT CAUSE</div>
+      <div class="pdf-stage-title">நிலை 02 • STAGE 02: CORE LEGAL ISSUE &amp; ROOT CAUSE</div>
       <div class="pdf-subheading">CORE LEGAL ISSUE / உண்மையான பிரச்சனை</div>
       <p class="pdf-article-lead" style="border-left: 3px solid #dc2626; padding-left: 8px; margin-bottom: 8px;">
         ${escapePdfHtml(realIssue)}
@@ -363,9 +404,9 @@ export function renderStage00To10Blocks(caseData: PropertyCase): PDFSectionBlock
   const relMap = typeof stage3 === 'object' && stage3 !== null ? stage3.partyRelationshipMap : "Direct adverse claim between petitioner and respondent.";
 
   blocks.push({
-    minRemainingHeight: 180,
+    minRemainingHeight: 80,
     html: `
-      <div class="pdf-section-title">STAGE 03: SUBJECT MATTER &amp; RELATIONSHIP MAP</div>
+      <div class="pdf-stage-title">நிலை 03 • STAGE 03: SUBJECT MATTER &amp; RELATIONSHIP MAP</div>
       <div class="pdf-subheading">PROPERTY SUBJECT MATTER / சொத்து வகை</div>
       <p class="pdf-article-lead" style="margin-bottom: 8px;">
         ${escapePdfHtml(subjectType)}
@@ -378,24 +419,27 @@ export function renderStage00To10Blocks(caseData: PropertyCase): PDFSectionBlock
     `
   });
 
-  // STAGE 04: Cause of Action Timeline (Clean 100% Proportional Table)
+  // STAGE 04: Cause of Action Timeline (Clean 100% Proportional Table with Accurate Parsed Dates)
   const stage4Events = stage4.timelineEvents || stage4.events || [];
   if (stage4Events.length > 0) {
     blocks.push({
-      minRemainingHeight: 180,
+      minRemainingHeight: 80,
       html: `
-        <div class="pdf-section-title">STAGE 04: CAUSE OF ACTION TIMELINE &amp; CHRONOLOGY</div>
+        <div class="pdf-stage-title">நிலை 04 • STAGE 04: CAUSE OF ACTION TIMELINE &amp; CHRONOLOGY</div>
         <table class="pdf-table">
           <tr>
-            <th style="width: 20%;">Date / Period</th>
-            <th style="width: 80%;">Event &amp; Material Action Description</th>
+            <th style="width: 25%;">Date / Period (காலம் / தேதி)</th>
+            <th style="width: 75%;">Event &amp; Material Action Description (நிகழ்வு விவரம்)</th>
           </tr>
-          ${stage4Events.map((ev: any) => `
-            <tr>
-              <td><b>${escapePdfHtml(typeof ev === 'string' ? 'Timeline Entry' : (ev.date || ev.year || 'Timeline Event'))}</b></td>
-              <td>${escapePdfHtml(typeof ev === 'string' ? ev : (ev.event || ev.description || ''))}</td>
-            </tr>
-          `).join("")}
+          ${stage4Events.map((ev: any) => {
+            const parsed = parseTimelineEntry(ev);
+            return `
+              <tr>
+                <td><b>${escapePdfHtml(parsed.date)}</b></td>
+                <td>${escapePdfHtml(parsed.description)}</td>
+              </tr>
+            `;
+          }).join("")}
         </table>
       `
     });
@@ -409,9 +453,9 @@ export function renderStage00To10Blocks(caseData: PropertyCase): PDFSectionBlock
   const availableProtections = stage5.availableProtections || ["Injunction protection and statutory revision appeal"];
 
   blocks.push({
-    minRemainingHeight: 200,
+    minRemainingHeight: 90,
     html: `
-      <div class="pdf-section-title">STAGE 05: RIGHTS, DUTIES &amp; LIABILITIES MATRIX</div>
+      <div class="pdf-stage-title">நிலை 05 • STAGE 05: RIGHTS, DUTIES &amp; LIABILITIES MATRIX</div>
       
       <div class="pdf-subheading" style="color: #b91c1c;">உரிமை மீறல்கள் / RIGHTS VIOLATED</div>
       <ul class="pdf-list">
@@ -445,9 +489,9 @@ export function renderStage00To10Blocks(caseData: PropertyCase): PDFSectionBlock
   const missingDocs = stage6.missing || ["30-Year Encumbrance Certificate", "FMB Survey Sketch"];
 
   blocks.push({
-    minRemainingHeight: 180,
+    minRemainingHeight: 90,
     html: `
-      <div class="pdf-section-title">STAGE 06: DOCUMENTARY EVIDENCE AUDIT &amp; STRENGTH ASSESSMENT</div>
+      <div class="pdf-stage-title">நிலை 06 • STAGE 06: DOCUMENTARY EVIDENCE AUDIT &amp; STRENGTH ASSESSMENT</div>
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; background: #f8fafc; padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 10pt;">
         <span class="pdf-label">Overall Evidence Strength Assessment:</span>
         <span class="pdf-badge ${stage6.evidenceStrength === 'Ironclad' || stage6.evidenceStrength === 'Strong' ? 'pdf-badge-emerald' : 'pdf-badge-amber'}" style="padding: 2px 6px;">
@@ -457,12 +501,12 @@ export function renderStage00To10Blocks(caseData: PropertyCase): PDFSectionBlock
 
       <div class="pdf-subheading" style="color: #15803d;">உங்களிடம் உள்ள ஆவணங்கள் / AVAILABLE EVIDENCE</div>
       <ul class="pdf-list" style="color: #14532d;">
-        ${availableDocs.map((a: string) => `<li>✓ <b>${escapePdfHtml(a)}</b></li>`).join("")}
+        ${availableDocs.map((a: string) => `<li><span class="pdf-badge pdf-badge-emerald" style="margin-right: 6px;">✓ AVAILABLE</span><b>${escapePdfHtml(a)}</b></li>`).join("")}
       </ul>
 
       <div class="pdf-subheading" style="color: #b91c1c;">பெறப்பட வேண்டிய ஆவணங்கள் / MISSING EVIDENCE</div>
       <ul class="pdf-list" style="color: #7f1d1d;">
-        ${missingDocs.map((m: string) => `<li>! <b>${escapePdfHtml(m)}</b></li>`).join("")}
+        ${missingDocs.map((m: string) => `<li><span class="pdf-badge pdf-badge-rose" style="margin-right: 6px;">! MISSING</span><b>${escapePdfHtml(m)}</b></li>`).join("")}
       </ul>
     `
   });
@@ -472,9 +516,9 @@ export function renderStage00To10Blocks(caseData: PropertyCase): PDFSectionBlock
   const altOptions = stage8.alternativeOptions || [];
 
   blocks.push({
-    minRemainingHeight: 200,
+    minRemainingHeight: 100,
     html: `
-      <div class="pdf-section-title">STAGE 07 &amp; 08: JURISDICTIONAL ROUTE &amp; LEGAL REMEDIES</div>
+      <div class="pdf-stage-title">நிலை 07 &amp; 08 • STAGE 07 &amp; 08: JURISDICTIONAL ROUTE &amp; LEGAL REMEDIES</div>
       
       <div class="pdf-subheading" style="color: #1e1b4b; border-bottom: 1.5px solid #1e1b4b; padding-bottom: 3px; margin-bottom: 6px;">
         STAGE 07: AUTHORITY HIERARCHY &amp; JURISDICTIONAL ROUTE
@@ -525,9 +569,9 @@ export function renderStage00To10Blocks(caseData: PropertyCase): PDFSectionBlock
   const deliverables = stage10.deliverablesList || [];
 
   blocks.push({
-    minRemainingHeight: 200,
+    minRemainingHeight: 100,
     html: `
-      <div class="pdf-section-title">STAGE 09 &amp; 10: LITIGATION RISK RATING &amp; LEGAL SERVICE PACKAGE</div>
+      <div class="pdf-stage-title">நிலை 09 &amp; 10 • STAGE 09 &amp; 10: LITIGATION RISK RATING &amp; LEGAL SERVICE PACKAGE</div>
       
       <div class="pdf-subheading" style="color: #1e1b4b; border-bottom: 1.5px solid #1e1b4b; padding-bottom: 3px; margin-bottom: 6px;">
         STAGE 09: RISK ASSESSMENT
@@ -614,11 +658,11 @@ export function renderStage11Blocks(caseData: PropertyCase): PDFSectionBlock[] {
 
   // 1. Stage 11 Title + Summary KPI Grid + Success Probability
   blocks.push({
-    minRemainingHeight: 200,
+    minRemainingHeight: 120,
     html: `
       ${PDF_SHARED_STYLES}
       <div class="pdf-stage-title">
-        நிலை 11 - முன்மாதிரி தீர்ப்புகள் • STAGE 11 PRECEDENT INTELLIGENCE
+        நிலை 11 • STAGE 11: PRECEDENT INTELLIGENCE (முன்மாதிரி தீர்ப்புகள்)
       </div>
 
       <!-- Summary KPI Grid -->
@@ -665,7 +709,7 @@ export function renderStage11Blocks(caseData: PropertyCase): PDFSectionBlock[] {
   // 2. Overall Legal Principles (Full-width list)
   if (overallPrinciples.length > 0) {
     blocks.push({
-      minRemainingHeight: 160,
+      minRemainingHeight: 90,
       html: `
         <div class="pdf-section-title">முக்கிய பொதுவான சட்டக் கோட்பாடுகள் • OVERALL LEGAL PRINCIPLES</div>
         <ul class="pdf-list" style="margin-bottom: 10px;">
@@ -689,7 +733,7 @@ export function renderStage11Blocks(caseData: PropertyCase): PDFSectionBlock[] {
 
       // Case Header & Factual Similarity
       blocks.push({
-        minRemainingHeight: 160,
+        minRemainingHeight: 90,
         html: `
           <div style="border-top: 2px solid #1e1b4b; padding-top: 6px; margin-top: 8px; margin-bottom: 6px; font-size: 10pt;">
             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
@@ -742,7 +786,7 @@ export function renderStage11Blocks(caseData: PropertyCase): PDFSectionBlock[] {
       // Case Facts Comparison Table (if present)
       if (c.factsComparison && c.factsComparison.length > 0) {
         blocks.push({
-          minRemainingHeight: 140,
+          minRemainingHeight: 90,
           html: `
             <div class="pdf-subheading" style="margin-top: 0;">FACTS COMPARISON MATRIX (${escapePdfHtml(citation)})</div>
             <table class="pdf-table" style="margin-bottom: 8px;">
@@ -767,7 +811,7 @@ export function renderStage11Blocks(caseData: PropertyCase): PDFSectionBlock[] {
 
       // Case Holdings, Reasoning, Outcome & Strategic Value (Full-Width Article Sequential Layout)
       blocks.push({
-        minRemainingHeight: 160,
+        minRemainingHeight: 90,
         html: `
           <div>
             ${c.keyLegalHoldings && c.keyLegalHoldings.length > 0 ? `
@@ -823,7 +867,7 @@ export function renderStage11Blocks(caseData: PropertyCase): PDFSectionBlock[] {
   // 4. Government Orders (G.O.s) - Title and Table kept together with strict orphan protection
   if (govOrders.length > 0) {
     blocks.push({
-      minRemainingHeight: 200,
+      minRemainingHeight: 90,
       html: `
         <div class="pdf-section-title">அரசாணைகள் • GOVERNMENT ORDERS (G.O.s)</div>
         <table class="pdf-table">
@@ -851,7 +895,7 @@ export function renderStage11Blocks(caseData: PropertyCase): PDFSectionBlock[] {
   // 5. Circulars - Title and Table kept together with strict orphan protection
   if (circulars.length > 0) {
     blocks.push({
-      minRemainingHeight: 200,
+      minRemainingHeight: 90,
       html: `
         <div class="pdf-section-title">சுற்றறிக்கைகள் • OFFICIAL REVENUE &amp; REGISTRATION CIRCULARS</div>
         <table class="pdf-table">
@@ -879,7 +923,7 @@ export function renderStage11Blocks(caseData: PropertyCase): PDFSectionBlock[] {
   // 6. Relevant Statutes List
   if (statutesList.length > 0) {
     blocks.push({
-      minRemainingHeight: 120,
+      minRemainingHeight: 70,
       html: `
         <div class="pdf-section-title">பொருந்தும் சட்டப்பிரிவுகள் • RELEVANT STATUTES &amp; SECTIONS</div>
         <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px;">
@@ -892,7 +936,7 @@ export function renderStage11Blocks(caseData: PropertyCase): PDFSectionBlock[] {
   // 7. Precedent-Based Strategy Recommendation
   if (stage11.strategyRecommendationFromPrecedents) {
     blocks.push({
-      minRemainingHeight: 140,
+      minRemainingHeight: 70,
       html: `
         <div class="pdf-callout-gold" style="margin-bottom: 8px;">
           <div class="pdf-subheading" style="color: #78350f; margin-top: 0; margin-bottom: 4px;">
@@ -918,11 +962,11 @@ export function renderStage12Blocks(caseData: PropertyCase): PDFSectionBlock[] {
 
   if (!stage12) {
     blocks.push({
-      minRemainingHeight: 120,
+      minRemainingHeight: 100,
       html: `
         ${PDF_SHARED_STYLES}
         <div class="pdf-stage-title">
-          நிலை 12 - சட்ட உத்தி சிமுலேட்டர் • STAGE 12 LEGAL STRATEGY SIMULATOR
+          நிலை 12 • STAGE 12: LITIGATION SIMULATOR &amp; COUNTER-STRATEGY
         </div>
         <p class="pdf-article" style="color: #64748b; font-style: italic;">No Stage 12 data available in this case analysis.</p>
       `
@@ -939,11 +983,11 @@ export function renderStage12Blocks(caseData: PropertyCase): PDFSectionBlock[] {
 
   // 1. Strongest Legal Route Block (Full-Width Article + Compact Metric Box)
   blocks.push({
-    minRemainingHeight: 220,
+    minRemainingHeight: 110,
     html: `
       ${PDF_SHARED_STYLES}
       <div class="pdf-stage-title">
-        நிலை 12 - சட்ட உத்தி சிமுலேட்டர் • STAGE 12 LEGAL STRATEGY SIMULATOR
+        நிலை 12 • STAGE 12: LITIGATION SIMULATOR &amp; COUNTER-STRATEGY
       </div>
 
       ${route ? `
@@ -978,7 +1022,7 @@ export function renderStage12Blocks(caseData: PropertyCase): PDFSectionBlock[] {
   // 2. Most Persuasive Precedents (Full-width list)
   if (precedentsList.length > 0) {
     blocks.push({
-      minRemainingHeight: 140,
+      minRemainingHeight: 80,
       html: `
         <div class="pdf-section-title">12.2 மிகவும் வலுவான முன்மாதிரி தீர்ப்புகள் • MOST PERSUASIVE PRECEDENTS</div>
         <ul class="pdf-list" style="margin-bottom: 8px;">
@@ -991,7 +1035,7 @@ export function renderStage12Blocks(caseData: PropertyCase): PDFSectionBlock[] {
   // 3. Evidence Gaps to Fill (12.3) (Proportional Table)
   if (evidenceGaps.length > 0) {
     blocks.push({
-      minRemainingHeight: 200,
+      minRemainingHeight: 90,
       html: `
         <div class="pdf-section-title">12.3 நிரப்பப்பட வேண்டிய ஆதார இடைவெளிகள் • EVIDENCE GAPS TO FILL</div>
         <table class="pdf-table">
@@ -1015,7 +1059,7 @@ export function renderStage12Blocks(caseData: PropertyCase): PDFSectionBlock[] {
   // 4. Opposing Counterarguments & Rebuttals (12.4) (Proportional Table)
   if (counterargs.length > 0) {
     blocks.push({
-      minRemainingHeight: 200,
+      minRemainingHeight: 90,
       html: `
         <div class="pdf-section-title">12.4 எதிர்த்தரப்பின் சாத்தியமான வாதங்கள் &amp; பதில் உத்தி • COUNTERARGUMENT SIMULATOR &amp; REBUTTALS</div>
         <table class="pdf-table">
@@ -1037,7 +1081,7 @@ export function renderStage12Blocks(caseData: PropertyCase): PDFSectionBlock[] {
   // 5. Recommended Additional Proof (12.5) (Proportional Table)
   if (additionalProofs.length > 0) {
     blocks.push({
-      minRemainingHeight: 200,
+      minRemainingHeight: 90,
       html: `
         <div class="pdf-section-title">12.5 கூடுதல் சாட்சியங்கள் &amp; ஆவணப் பரிந்துரைகள் • RECOMMENDED ADDITIONAL PROOF</div>
         <table class="pdf-table">
@@ -1061,7 +1105,7 @@ export function renderStage12Blocks(caseData: PropertyCase): PDFSectionBlock[] {
   // 6. Priority Next Actions Roadmap (12.6) (Proportional Table)
   if (priorityActions.length > 0) {
     blocks.push({
-      minRemainingHeight: 200,
+      minRemainingHeight: 90,
       html: `
         <div class="pdf-section-title">12.6 அடுத்தடுத்த முதன்மை நடவடிக்கைகள் • PRIORITY ACTION ROADMAP</div>
         <table class="pdf-table">
@@ -1101,11 +1145,11 @@ export function renderClientActionBlocks(caseData: PropertyCase): PDFSectionBloc
 
   // A. CLIENT ACTION BRIEF (Full-Width Article Layout)
   blocks.push({
-    minRemainingHeight: 220,
+    minRemainingHeight: 110,
     html: `
       ${PDF_SHARED_STYLES}
       <div class="pdf-stage-title">
-        வாடிக்கையாளர் நடவடிக்கை வழிகாட்டி • CLIENT ACTION BRIEF &amp; ADVISORY ROADMAP
+        வாடிக்கையாளர் செயல் திட்ட அறிக்கை • CLIENT ACTION BRIEF &amp; ADVISORY ROADMAP
       </div>
 
       <!-- Problem & Position in Plain Language -->
@@ -1145,7 +1189,7 @@ export function renderClientActionBlocks(caseData: PropertyCase): PDFSectionBloc
   const within30 = immediate.within30Days || ["File formal appeal under Patta Pass Book Act Section 12", "Seek advocate representation before RDO enquiry"];
 
   blocks.push({
-    minRemainingHeight: 180,
+    minRemainingHeight: 90,
     html: `
       <div class="pdf-section-title">காலவரிசைப்படி செய்ய வேண்டிய நடவடிக்கைகள் • CHRONOLOGICAL ACTION ROADMAP</div>
       <table class="pdf-table">
@@ -1182,8 +1226,8 @@ export function renderClientActionBlocks(caseData: PropertyCase): PDFSectionBloc
   });
 
   // C. REQUIRED PROPERTY DOCUMENTS (Full-Width Categorized Lists)
-  const availableSet = new Set<string>([...(stage6.available || []), ...(docsReq.available || [])]);
-  const missingSet = new Set<string>([...(stage6.missing || []), ...(docsReq.missing || [])]);
+  const availList = [...(stage6.available || []), ...(docsReq.available || [])];
+  const missList = [...(stage6.missing || []), ...(docsReq.missing || [])];
 
   const titleDocs = docsReq.mandatory || ["Original Registered Title Deed", "Parent Document Link Deeds (30 Years)"];
   const revenueDocs = docsReq.revenue || ["Patta Passbook / Online e-Patta Extract", "Field Measurement Book (FMB) Sketch", "A-Register Extract"];
@@ -1191,7 +1235,7 @@ export function renderClientActionBlocks(caseData: PropertyCase): PDFSectionBloc
   const courtDocs = docsReq.court || ["Copy of prior revenue/court proceedings", "Certified copy of registered objection"];
 
   blocks.push({
-    minRemainingHeight: 200,
+    minRemainingHeight: 100,
     html: `
       <div class="pdf-section-title">தேவைப்படும் முக்கிய ஆவணங்கள் • REQUIRED PROPERTY DOCUMENTS CHECKLIST</div>
       
@@ -1200,11 +1244,11 @@ export function renderClientActionBlocks(caseData: PropertyCase): PDFSectionBloc
       </div>
       <ul class="pdf-list" style="margin-bottom: 8px;">
         ${titleDocs.map((doc: string) => {
-          const isAvail = availableSet.has(doc) || (!missingSet.has(doc) && availableSet.size === 0);
+          const isAvail = checkIsDocumentAvailable(doc, availList, missList) || (!missList.some(m => doc.toLowerCase().includes(m.toLowerCase())) && availList.length === 0);
           return `
             <li style="margin-bottom: 3px;">
-              <span style="color: ${isAvail ? '#15803d' : '#b91c1c'}; font-weight: 700;">[${isAvail ? 'AVAILABLE ✓' : 'MISSING !'}]</span>
-              ${escapePdfHtml(doc)}
+              <span class="pdf-badge ${isAvail ? 'pdf-badge-emerald' : 'pdf-badge-rose'}" style="margin-right: 6px;">${isAvail ? '✓ AVAILABLE' : '! MISSING'}</span>
+              <b>${escapePdfHtml(doc)}</b>
             </li>
           `;
         }).join("")}
@@ -1215,11 +1259,11 @@ export function renderClientActionBlocks(caseData: PropertyCase): PDFSectionBloc
       </div>
       <ul class="pdf-list" style="margin-bottom: 8px;">
         ${revenueDocs.map((doc: string) => {
-          const isAvail = availableSet.has(doc);
+          const isAvail = checkIsDocumentAvailable(doc, availList, missList);
           return `
             <li style="margin-bottom: 3px;">
-              <span style="color: ${isAvail ? '#15803d' : '#b91c1c'}; font-weight: 700;">[${isAvail ? 'AVAILABLE ✓' : 'MISSING !'}]</span>
-              ${escapePdfHtml(doc)}
+              <span class="pdf-badge ${isAvail ? 'pdf-badge-emerald' : 'pdf-badge-rose'}" style="margin-right: 6px;">${isAvail ? '✓ AVAILABLE' : '! MISSING'}</span>
+              <b>${escapePdfHtml(doc)}</b>
             </li>
           `;
         }).join("")}
@@ -1230,11 +1274,11 @@ export function renderClientActionBlocks(caseData: PropertyCase): PDFSectionBloc
       </div>
       <ul class="pdf-list" style="margin-bottom: 8px;">
         ${familyDocs.map((doc: string) => {
-          const isAvail = availableSet.has(doc);
+          const isAvail = checkIsDocumentAvailable(doc, availList, missList);
           return `
             <li style="margin-bottom: 3px;">
-              <span style="color: ${isAvail ? '#15803d' : '#b91c1c'}; font-weight: 700;">[${isAvail ? 'AVAILABLE ✓' : 'MISSING !'}]</span>
-              ${escapePdfHtml(doc)}
+              <span class="pdf-badge ${isAvail ? 'pdf-badge-emerald' : 'pdf-badge-rose'}" style="margin-right: 6px;">${isAvail ? '✓ AVAILABLE' : '! MISSING'}</span>
+              <b>${escapePdfHtml(doc)}</b>
             </li>
           `;
         }).join("")}
@@ -1245,11 +1289,11 @@ export function renderClientActionBlocks(caseData: PropertyCase): PDFSectionBloc
       </div>
       <ul class="pdf-list" style="margin-bottom: 8px;">
         ${courtDocs.map((doc: string) => {
-          const isAvail = availableSet.has(doc);
+          const isAvail = checkIsDocumentAvailable(doc, availList, missList);
           return `
             <li style="margin-bottom: 3px;">
-              <span style="color: ${isAvail ? '#15803d' : '#b91c1c'}; font-weight: 700;">[${isAvail ? 'AVAILABLE ✓' : 'MISSING !'}]</span>
-              ${escapePdfHtml(doc)}
+              <span class="pdf-badge ${isAvail ? 'pdf-badge-emerald' : 'pdf-badge-rose'}" style="margin-right: 6px;">${isAvail ? '✓ AVAILABLE' : '! MISSING'}</span>
+              <b>${escapePdfHtml(doc)}</b>
             </li>
           `;
         }).join("")}
@@ -1265,7 +1309,7 @@ export function renderClientActionBlocks(caseData: PropertyCase): PDFSectionBloc
     const delivList = servicePkg.deliverables || caseData.stage10?.deliverablesList || [];
 
     blocks.push({
-      minRemainingHeight: 180,
+      minRemainingHeight: 90,
       html: `
         <div class="pdf-callout-gold" style="margin-bottom: 8px;">
           <div style="display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid #fde68a; padding-bottom: 4px; margin-bottom: 6px; font-size: 10pt;">
@@ -1296,7 +1340,7 @@ export function renderClientActionBlocks(caseData: PropertyCase): PDFSectionBloc
 
   // Advocate Review & Signature Block
   blocks.push({
-    minRemainingHeight: 110,
+    minRemainingHeight: 80,
     html: `
       <div style="margin-top: 12px; padding-top: 8px; border-top: 1.5px solid #1e1b4b; display: flex; justify-content: space-between; align-items: flex-end; font-size: 10pt; color: #475569;">
         <div>

@@ -177,9 +177,9 @@ export async function renderAndDownloadPaginatedPDF(
       color: #1e1b4b;
       margin: 12pt 0 6pt 0;
       padding-left: 8px;
-      border-left: 3px solid #1e1b4b;
+      border-left: 3.5px solid #1e1b4b;
       text-transform: uppercase;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.03em;
       line-height: 1.45;
       width: 100%;
       display: block;
@@ -188,11 +188,11 @@ export async function renderAndDownloadPaginatedPDF(
       font-size: 10pt !important;
       font-weight: 800;
       color: #1e1b4b;
-      margin: 10pt 0 4pt 0;
+      margin: 9pt 0 4pt 0;
       padding-left: 6px;
-      border-left: 2.5px solid #1e1b4b;
+      border-left: 2.5px solid #4338ca;
       text-transform: uppercase;
-      letter-spacing: 0.03em;
+      letter-spacing: 0.02em;
       line-height: 1.45;
       width: 100%;
       display: block;
@@ -255,23 +255,23 @@ export async function renderAndDownloadPaginatedPDF(
       table-layout: fixed;
     }
     .pdf-table th {
-      background-color: #1e1b4b;
-      color: #ffffff;
+      background-color: #f1f5f9;
+      color: #1e1b4b;
       font-weight: 700;
       text-align: left;
       padding: 5px 8px;
-      border: 1px solid #1e1b4b;
+      border: 1px solid #cbd5e1;
       font-size: 10pt !important;
       line-height: 1.45;
-      vertical-align: top;
+      vertical-align: middle;
     }
     .pdf-table td {
       padding: 5px 8px;
       border: 1px solid #cbd5e1;
-      color: #334155;
+      color: #1e293b;
       vertical-align: top;
       word-break: break-word;
-      line-height: 1.55;
+      line-height: 1.5;
       font-size: 10pt !important;
     }
     .pdf-table tr:nth-child(even) td {
