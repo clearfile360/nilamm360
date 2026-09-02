@@ -47,46 +47,43 @@ export function getPdfLetterheadHeader(options: {
   statusBadge?: string;
 }): string {
   return `
-    <div class="pdf-header-wrapper" style="width: 100%; border-bottom: 2px solid #D4AF37; padding-bottom: 8px; margin-bottom: 10px; font-family: 'Plus Jakarta Sans', 'Mukta Malar', 'Noto Sans Tamil', system-ui, -apple-system, sans-serif;">
+    <div class="pdf-header-wrapper" style="width: 100%; border-bottom: 2px solid #1e1b4b; padding-bottom: 8px; margin-bottom: 10px; font-family: 'Mukta Malar', 'Noto Sans Tamil', system-ui, -apple-system, sans-serif; font-size: 10pt;">
       <div style="display: flex; justify-content: space-between; align-items: flex-start;">
         <div style="display: flex; align-items: center; gap: 10px;">
-          <div style="width: 36px; height: 36px; border-radius: 8px; background: linear-gradient(135deg, #1e1b4b, #312e81, #4338ca); display: flex; align-items: center; justify-content: center; color: #ffffff; font-weight: 900; font-size: 15pt; border: 1.5px solid #D4AF37; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+          <div style="width: 36px; height: 36px; border-radius: 6px; background: linear-gradient(135deg, #1e1b4b, #312e81, #4338ca); display: flex; align-items: center; justify-content: center; color: #ffffff; font-weight: 900; font-size: 14pt; border: 1.5px solid #D4AF37; box-shadow: 0 2px 4px rgba(0,0,0,0.1); shrink-0;">
             <span style="background: linear-gradient(135deg, #FDE68A, #D4AF37, #FFFFFF); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">U</span>
           </div>
           <div>
             <div style="display: flex; align-items: baseline; gap: 6px;">
-              <span style="font-size: 12pt; font-weight: 900; letter-spacing: 0.05em; color: #0f172a; text-transform: uppercase;">UNIKORN360</span>
-              <span style="font-size: 9pt; font-weight: 700; color: #B8860B; letter-spacing: 0.06em; text-transform: uppercase;">BUSINESS INTELLIGENCE</span>
+              <span style="font-weight: 800; letter-spacing: 0.05em; color: #0f172a; text-transform: uppercase; font-size: 10pt;">UNIKORN360</span>
+              <span style="font-weight: 700; color: #78350f; letter-spacing: 0.04em; text-transform: uppercase; font-size: 10pt;">BUSINESS INTELLIGENCE</span>
             </div>
-            <div style="font-size: 8pt; font-weight: 600; color: #64748b; letter-spacing: 0.03em;">
-              Intelligent Systems • Real-World Impact
-            </div>
-            <div style="font-size: 7.5pt; color: #475569; margin-top: 1px; font-weight: 500;">
-              Business Consulting • AI &amp; Systems Strategy • Finance Advisory • Compliance &amp; Subsidy • Corporate Branding • Project Consulting
+            <div style="font-weight: 600; color: #475569; font-size: 10pt; line-height: 1.35;">
+              Intelligent Systems • Real-World Impact • Land Revenue &amp; Legal AI Division
             </div>
           </div>
         </div>
 
-        <div style="text-align: right; font-size: 8.5pt; color: #334155; line-height: 1.35;">
-          <div style="display: inline-block; background: #f1f5f9; border: 1px solid #cbd5e1; padding: 2px 6px; border-radius: 4px; font-weight: 800; color: #1e293b; font-size: 8pt; text-transform: uppercase; letter-spacing: 0.04em;">
+        <div style="text-align: right; color: #334155; line-height: 1.35; font-size: 10pt;">
+          <div style="display: inline-block; background: #f1f5f9; border: 1px solid #cbd5e1; padding: 2px 6px; border-radius: 4px; font-weight: 800; color: #1e293b; text-transform: uppercase; letter-spacing: 0.03em; font-size: 10pt;">
             ${escapePdfHtml(options.reportType)}
           </div>
-          <div style="margin-top: 3px; font-family: monospace; font-weight: 700; color: #0f172a; font-size: 8.5pt;">
+          <div style="margin-top: 3px; font-weight: 700; color: #0f172a; font-size: 10pt;">
             CASE ID: <span style="color: #4338ca;">${escapePdfHtml(options.caseId)}</span>
           </div>
-          <div style="color: #64748b; font-size: 8pt;">
+          <div style="color: #64748b; font-size: 10pt;">
             DATE: ${escapePdfHtml(options.dateStr)}
             ${options.modelUsed ? ` • MODEL: <b style="color:#0f172a;">${escapePdfHtml(options.modelUsed)}</b>` : ""}
           </div>
         </div>
       </div>
 
-      <div style="margin-top: 6px; padding-top: 5px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
-        <div style="font-size: 15pt; font-weight: 800; color: #0f172a; letter-spacing: -0.01em; line-height: 1.2;">
+      <div style="margin-top: 6px; padding-top: 5px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; font-size: 10pt;">
+        <div style="font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.02em; line-height: 1.3; font-size: 10pt;">
           ${escapePdfHtml(options.documentTitle)}
         </div>
         ${options.clientName ? `
-          <div style="font-size: 8.5pt; color: #475569; font-weight: 600;">
+          <div style="color: #475569; font-weight: 600; font-size: 10pt;">
             Client: <b style="color:#0f172a;">${escapePdfHtml(options.clientName)}</b>
             ${options.category ? ` | ${escapePdfHtml(options.category)}` : ""}
           </div>
@@ -101,11 +98,11 @@ export function getPdfLetterheadHeader(options: {
  */
 export function getPdfLetterheadFooter(pageIndex: number, totalPages: number): string {
   return `
-    <div class="pdf-footer-wrapper" style="width: 100%; border-top: 1.5px solid #D4AF37; padding-top: 5px; margin-top: 8px; font-family: 'Plus Jakarta Sans', 'Mukta Malar', 'Noto Sans Tamil', system-ui, -apple-system, sans-serif; display: flex; justify-content: space-between; align-items: center; font-size: 8pt; color: #64748b;">
+    <div class="pdf-footer-wrapper" style="width: 100%; border-top: 1.5px solid #1e1b4b; padding-top: 5px; margin-top: 8px; font-family: 'Mukta Malar', 'Noto Sans Tamil', system-ui, -apple-system, sans-serif; display: flex; justify-content: space-between; align-items: center; font-size: 10pt; color: #475569;">
       <div>
-        <span style="font-weight: 700; color: #0f172a;">UNIKORN360 Business Intelligence</span> • Land Revenue &amp; Registration Legal AI Division • Confidential Report
+        <span style="font-weight: 700; color: #0f172a;">UNIKORN360 Business Intelligence</span> • Land Revenue &amp; Registration Legal AI • Confidential Report
       </div>
-      <div style="font-weight: 700; color: #1e293b; font-family: monospace;">
+      <div style="font-weight: 800; color: #1e1b4b; font-size: 10pt;">
         PAGE ${pageIndex} OF ${totalPages}
       </div>
     </div>
@@ -138,7 +135,7 @@ export async function renderAndDownloadPaginatedPDF(
   measureContainer.style.top = "-9999px";
   measureContainer.style.width = `${A4_WIDTH_PX - PADDING_HORIZ * 2}px`;
   measureContainer.style.boxSizing = "border-box";
-  measureContainer.style.fontFamily = "'Plus Jakarta Sans', 'Mukta Malar', 'Noto Sans Tamil', system-ui, -apple-system, sans-serif";
+  measureContainer.style.fontFamily = "'Mukta Malar', 'Noto Sans Tamil', system-ui, -apple-system, sans-serif";
   measureContainer.style.fontSize = "10pt";
   measureContainer.style.lineHeight = "1.55";
   measureContainer.style.color = "#1e293b";
@@ -146,22 +143,138 @@ export async function renderAndDownloadPaginatedPDF(
   // Inject default baseline typography style for measurement matching the legal report aesthetic
   const styleEl = document.createElement("style");
   styleEl.innerHTML = `
-    * { box-sizing: border-box; }
-    .pdf-stage-title { font-size: 14pt; font-weight: 800; color: #1e1b4b; margin: 14pt 0 6pt 0; padding-left: 8px; border-left: 4px solid #D4AF37; text-transform: uppercase; letter-spacing: 0.02em; line-height: 1.35; }
-    .pdf-section-title { font-size: 12pt; font-weight: 800; color: #1e1b4b; margin: 12pt 0 5pt 0; padding-left: 6px; border-left: 3px solid #D4AF37; text-transform: uppercase; letter-spacing: 0.02em; line-height: 1.35; }
-    .pdf-subheading { font-size: 11pt; font-weight: 700; color: #0f172a; margin: 8pt 0 3pt 0; line-height: 1.35; }
-    .pdf-p { font-size: 10pt; color: #1e293b; line-height: 1.55; margin: 0 0 8px 0; text-align: left; }
-    .pdf-callout { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 4px; padding: 8px 12px; margin-bottom: 8px; font-size: 10pt; line-height: 1.55; }
-    .pdf-table { width: 100%; border-collapse: collapse; font-size: 10pt; margin-bottom: 8px; table-layout: fixed; }
-    .pdf-table th { background-color: #1e1b4b; color: #ffffff; font-weight: 700; text-align: left; padding: 6px 8px; border: 1px solid #1e1b4b; font-size: 10pt; line-height: 1.45; vertical-align: top; }
-    .pdf-table td { padding: 6px 8px; border: 1px solid #cbd5e1; color: #334155; vertical-align: top; word-break: break-word; line-height: 1.55; font-size: 10pt; }
-    .pdf-table tr:nth-child(even) td { background-color: #f8fafc; }
-    .pdf-label { font-weight: 700; color: #475569; font-size: 8.5pt; text-transform: uppercase; letter-spacing: 0.03em; }
-    .pdf-val { color: #0f172a; font-weight: 600; font-size: 10pt; }
-    .pdf-badge { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 8.5pt; font-weight: 700; text-transform: uppercase; white-space: nowrap; }
+    * {
+      box-sizing: border-box;
+      font-family: 'Mukta Malar', 'Noto Sans Tamil', system-ui, -apple-system, sans-serif !important;
+      font-size: 10pt !important;
+    }
+    .pdf-stage-title {
+      font-size: 10pt !important;
+      font-weight: 800;
+      color: #1e1b4b;
+      margin: 12pt 0 6pt 0;
+      padding-left: 8px;
+      border-left: 3px solid #1e1b4b;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      line-height: 1.45;
+    }
+    .pdf-section-title {
+      font-size: 10pt !important;
+      font-weight: 800;
+      color: #1e1b4b;
+      margin: 10pt 0 4pt 0;
+      padding-left: 6px;
+      border-left: 2.5px solid #1e1b4b;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      line-height: 1.45;
+    }
+    .pdf-subheading {
+      font-size: 10pt !important;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 6pt 0 3pt 0;
+      line-height: 1.45;
+    }
+    .pdf-p {
+      font-size: 10pt !important;
+      color: #1e293b;
+      line-height: 1.55;
+      margin: 0 0 8px 0;
+      text-align: left;
+    }
+    .pdf-p-lead {
+      font-size: 10pt !important;
+      font-weight: 700;
+      color: #0f172a;
+      line-height: 1.55;
+      margin: 0 0 8px 0;
+      text-align: left;
+    }
+    .pdf-callout {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-left: 3px solid #1e1b4b;
+      padding: 6px 10px;
+      margin-bottom: 8px;
+      font-size: 10pt !important;
+      line-height: 1.55;
+    }
+    .pdf-callout-gold {
+      background: #fffdf7;
+      border: 1px solid #cbd5e1;
+      border-left: 3px solid #b45309;
+      padding: 6px 10px;
+      margin-bottom: 8px;
+      font-size: 10pt !important;
+      line-height: 1.55;
+    }
+    .pdf-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 10pt !important;
+      margin-bottom: 8px;
+      table-layout: fixed;
+    }
+    .pdf-table th {
+      background-color: #1e1b4b;
+      color: #ffffff;
+      font-weight: 700;
+      text-align: left;
+      padding: 5px 8px;
+      border: 1px solid #1e1b4b;
+      font-size: 10pt !important;
+      line-height: 1.45;
+      vertical-align: top;
+    }
+    .pdf-table td {
+      padding: 5px 8px;
+      border: 1px solid #cbd5e1;
+      color: #334155;
+      vertical-align: top;
+      word-break: break-word;
+      line-height: 1.55;
+      font-size: 10pt !important;
+    }
+    .pdf-table tr:nth-child(even) td {
+      background-color: #f8fafc;
+    }
+    .pdf-label {
+      font-weight: 700;
+      color: #475569;
+      font-size: 10pt !important;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    .pdf-val {
+      color: #0f172a;
+      font-weight: 600;
+      font-size: 10pt !important;
+    }
+    .pdf-badge {
+      display: inline-block;
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-size: 10pt !important;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
     .pdf-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .pdf-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
     .pdf-grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 6px; }
+    .pdf-list {
+      margin: 0 0 8px 0;
+      padding-left: 18px;
+      font-size: 10pt !important;
+      color: #1e293b;
+      line-height: 1.55;
+    }
+    .pdf-list li {
+      margin-bottom: 4px;
+    }
   `;
   measureContainer.appendChild(styleEl);
 
@@ -291,7 +404,8 @@ export async function renderAndDownloadPaginatedPDF(
       pageNode.style.display = "flex";
       pageNode.style.flexDirection = "column";
       pageNode.style.justifyContent = "space-between";
-      pageNode.style.fontFamily = "'Plus Jakarta Sans', 'Mukta Malar', 'Noto Sans Tamil', system-ui, -apple-system, sans-serif";
+      pageNode.style.fontFamily = "'Mukta Malar', 'Noto Sans Tamil', system-ui, -apple-system, sans-serif";
+      pageNode.style.fontSize = "10pt";
       pageNode.style.overflow = "hidden";
 
       const topSection = document.createElement("div");
