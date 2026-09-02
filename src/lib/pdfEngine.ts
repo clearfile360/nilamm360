@@ -34,7 +34,7 @@ export function escapePdfHtml(str?: string | number | null): string {
 }
 
 /**
- * Letterhead HTML template
+ * Letterhead HTML template matching the Unikorn360 Business Intelligence executive letterhead style
  */
 export function getPdfLetterheadHeader(options: {
   documentTitle: string;
@@ -47,63 +47,41 @@ export function getPdfLetterheadHeader(options: {
   statusBadge?: string;
 }): string {
   return `
-    <div class="pdf-header-wrapper" style="width: 100%; border-bottom: 2px solid #1e1b4b; padding-bottom: 8px; margin-bottom: 10px; font-family: 'Mukta Malar', 'Noto Sans Tamil', system-ui, -apple-system, sans-serif; font-size: 10pt;">
-      <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-        <div style="display: flex; align-items: center; gap: 10px;">
-          <div style="width: 36px; height: 36px; border-radius: 6px; background: linear-gradient(135deg, #1e1b4b, #312e81, #4338ca); display: flex; align-items: center; justify-content: center; color: #ffffff; font-weight: 900; font-size: 14pt; border: 1.5px solid #D4AF37; box-shadow: 0 2px 4px rgba(0,0,0,0.1); shrink-0;">
-            <span style="background: linear-gradient(135deg, #FDE68A, #D4AF37, #FFFFFF); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">U</span>
+    <div class="pdf-header-wrapper" style="width: 100%; border-bottom: 1.5px solid #0f2b5c; padding-bottom: 6px; margin-bottom: 10px; font-family: 'Mukta Malar', 'Noto Sans Tamil', system-ui, -apple-system, sans-serif; font-size: 10pt;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+        <div>
+          <div style="font-weight: 800; color: #0f2b5c; font-size: 10pt; letter-spacing: 0.02em; text-transform: uppercase;">
+            Unikorn360 Business Intelligence
           </div>
-          <div>
-            <div style="display: flex; align-items: baseline; gap: 6px;">
-              <span style="font-weight: 800; letter-spacing: 0.05em; color: #0f172a; text-transform: uppercase; font-size: 10pt;">UNIKORN360</span>
-              <span style="font-weight: 700; color: #78350f; letter-spacing: 0.04em; text-transform: uppercase; font-size: 10pt;">BUSINESS INTELLIGENCE</span>
-            </div>
-            <div style="font-weight: 600; color: #475569; font-size: 10pt; line-height: 1.35;">
-              Intelligent Systems • Real-World Impact • Land Revenue &amp; Legal AI Division
-            </div>
+          <div style="font-weight: 600; color: #475569; font-size: 10pt; line-height: 1.3;">
+            Land Revenue &amp; Legal AI Division • 12-Stage Intelligence
           </div>
         </div>
 
         <div style="text-align: right; color: #334155; line-height: 1.35; font-size: 10pt;">
-          <div style="display: inline-block; background: #f1f5f9; border: 1px solid #cbd5e1; padding: 2px 6px; border-radius: 4px; font-weight: 800; color: #1e293b; text-transform: uppercase; letter-spacing: 0.03em; font-size: 10pt;">
-            ${escapePdfHtml(options.reportType)}
-          </div>
-          <div style="margin-top: 3px; font-weight: 700; color: #0f172a; font-size: 10pt;">
-            CASE ID: <span style="color: #4338ca;">${escapePdfHtml(options.caseId)}</span>
+          <div style="font-weight: 700; color: #0f2b5c;">
+            ${escapePdfHtml(options.reportType || "LEGAL ADVISORY REPORT")}
           </div>
           <div style="color: #64748b; font-size: 10pt;">
-            DATE: ${escapePdfHtml(options.dateStr)}
-            ${options.modelUsed ? ` • MODEL: <b style="color:#0f172a;">${escapePdfHtml(options.modelUsed)}</b>` : ""}
+            REF: <b style="color: #0f2b5c;">${escapePdfHtml(options.caseId)}</b> • DATE: ${escapePdfHtml(options.dateStr)}
           </div>
         </div>
-      </div>
-
-      <div style="margin-top: 6px; padding-top: 5px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; font-size: 10pt;">
-        <div style="font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.02em; line-height: 1.3; font-size: 10pt;">
-          ${escapePdfHtml(options.documentTitle)}
-        </div>
-        ${options.clientName ? `
-          <div style="color: #475569; font-weight: 600; font-size: 10pt;">
-            Client: <b style="color:#0f172a;">${escapePdfHtml(options.clientName)}</b>
-            ${options.category ? ` | ${escapePdfHtml(options.category)}` : ""}
-          </div>
-        ` : ""}
       </div>
     </div>
   `;
 }
 
 /**
- * Letterhead Footer template
+ * Letterhead Footer template matching the reference layout
  */
 export function getPdfLetterheadFooter(pageIndex: number, totalPages: number): string {
   return `
-    <div class="pdf-footer-wrapper" style="width: 100%; border-top: 1.5px solid #1e1b4b; padding-top: 5px; margin-top: 8px; font-family: 'Mukta Malar', 'Noto Sans Tamil', system-ui, -apple-system, sans-serif; display: flex; justify-content: space-between; align-items: center; font-size: 10pt; color: #475569;">
-      <div>
-        <span style="font-weight: 700; color: #0f172a;">UNIKORN360 Business Intelligence</span> • Land Revenue &amp; Registration Legal AI • Confidential Report
+    <div class="pdf-footer-wrapper" style="width: 100%; border-top: 1px solid #cbd5e1; padding-top: 4px; margin-top: 6px; font-family: 'Mukta Malar', 'Noto Sans Tamil', system-ui, -apple-system, sans-serif; display: flex; justify-content: space-between; align-items: center; font-size: 10pt; color: #64748b;">
+      <div style="color: #475569; font-weight: 500;">
+        Unikorn360 Business Intelligence
       </div>
-      <div style="font-weight: 800; color: #1e1b4b; font-size: 10pt;">
-        PAGE ${pageIndex} OF ${totalPages}
+      <div style="color: #475569; font-weight: 500;">
+        Page ${pageIndex} of ${totalPages}
       </div>
     </div>
   `;
@@ -174,35 +152,33 @@ export async function renderAndDownloadPaginatedPDF(
     .pdf-stage-title {
       font-size: 10pt !important;
       font-weight: 800;
-      color: #1e1b4b;
-      margin: 12pt 0 6pt 0;
-      padding-left: 8px;
-      border-left: 3.5px solid #1e1b4b;
+      color: #0f2b5c;
+      margin: 10pt 0 4pt 0;
+      padding-bottom: 2px;
+      border-bottom: 1.5px solid #0f2b5c;
       text-transform: uppercase;
-      letter-spacing: 0.03em;
-      line-height: 1.45;
+      letter-spacing: 0.02em;
+      line-height: 1.4;
       width: 100%;
       display: block;
     }
     .pdf-section-title {
       font-size: 10pt !important;
       font-weight: 800;
-      color: #1e1b4b;
-      margin: 9pt 0 4pt 0;
-      padding-left: 6px;
-      border-left: 2.5px solid #4338ca;
+      color: #0f2b5c;
+      margin: 8pt 0 3pt 0;
       text-transform: uppercase;
       letter-spacing: 0.02em;
-      line-height: 1.45;
+      line-height: 1.4;
       width: 100%;
       display: block;
     }
     .pdf-subheading {
       font-size: 10pt !important;
       font-weight: 700;
-      color: #0f172a;
-      margin: 6pt 0 3pt 0;
-      line-height: 1.45;
+      color: #0f2b5c;
+      margin: 6pt 0 2pt 0;
+      line-height: 1.4;
       width: 100%;
       display: block;
     }
@@ -211,8 +187,8 @@ export async function renderAndDownloadPaginatedPDF(
       display: block;
       font-size: 10pt !important;
       color: #1e293b;
-      line-height: 1.55;
-      margin: 0 0 8px 0;
+      line-height: 1.5;
+      margin: 0 0 6pt 0;
       text-align: left;
     }
     .pdf-p-lead {
@@ -220,58 +196,58 @@ export async function renderAndDownloadPaginatedPDF(
       display: block;
       font-size: 10pt !important;
       font-weight: 700;
-      color: #0f172a;
-      line-height: 1.55;
-      margin: 0 0 8px 0;
+      color: #0f2b5c;
+      line-height: 1.5;
+      margin: 0 0 6pt 0;
       text-align: left;
     }
     .pdf-callout {
       width: 100%;
       display: block;
-      background: #ffffff;
+      background: #f8fafc;
       border: 1px solid #cbd5e1;
-      border-left: 3px solid #1e1b4b;
+      border-left: 3px solid #0f2b5c;
       padding: 6px 10px;
-      margin-bottom: 8px;
+      margin-bottom: 6pt;
       font-size: 10pt !important;
-      line-height: 1.55;
+      line-height: 1.5;
     }
     .pdf-callout-gold {
       width: 100%;
       display: block;
-      background: #fffdf7;
-      border: 1px solid #cbd5e1;
-      border-left: 3px solid #b45309;
+      background: #fffbeb;
+      border: 1px solid #fde68a;
       padding: 6px 10px;
-      margin-bottom: 8px;
+      border-radius: 2px;
+      margin-bottom: 6pt;
       font-size: 10pt !important;
-      line-height: 1.55;
+      line-height: 1.5;
     }
     .pdf-table {
       width: 100%;
       border-collapse: collapse;
       font-size: 10pt !important;
-      margin-bottom: 8px;
+      margin-bottom: 6pt;
       table-layout: fixed;
     }
     .pdf-table th {
-      background-color: #f1f5f9;
-      color: #1e1b4b;
+      background-color: #0f2b5c;
+      color: #ffffff;
       font-weight: 700;
       text-align: left;
-      padding: 5px 8px;
+      padding: 4px 7px;
       border: 1px solid #cbd5e1;
       font-size: 10pt !important;
-      line-height: 1.45;
+      line-height: 1.4;
       vertical-align: middle;
     }
     .pdf-table td {
-      padding: 5px 8px;
+      padding: 4px 7px;
       border: 1px solid #cbd5e1;
       color: #1e293b;
       vertical-align: top;
       word-break: break-word;
-      line-height: 1.5;
+      line-height: 1.45;
       font-size: 10pt !important;
     }
     .pdf-table tr:nth-child(even) td {
